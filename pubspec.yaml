@@ -67,6 +67,16 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/default_ava.jpg
+    - assets/images/cm0.jpeg
+    - assets/images/cm1.jpeg
+    - assets/images/cm2.jpeg
+    - assets/images/cm3.jpeg
+    - assets/images/cm4.jpeg
+    - assets/images/cm5.jpeg
+    - assets/images/cm6.jpeg
+    - assets/images/cm7.jpeg
+    - assets/images/cm8.jpeg
+    - assets/images/cm9.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,7 +1,9 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
-import 'package:finalproject/sqlite/create_group.dart';
+import 'package:finalproject/sqlite/create_post.dart';
+import 'package:finalproject/widget/post_item.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:finalproject/util/data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -58,26 +60,26 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             ),
-            bottom: const TabBar(
-              tabs: <Widget>[
-                Tab(
-                  child: Text("Home"),
-                ),
-                Tab(
-                  child: Text("Popular"),
-                ),
-              ],
-            ),
           ),
           drawer: const NavBar(),
-          body: const Center(
-            child: Text("Hello Reddit"),
+          body: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemCount: posts.length,
+            itemBuilder: (BuildContext context, int index) {
+              Map post = posts[index];
+              return PostItem(
+                img: post['img'],
+                name: post['name'],
+                dp: post['dp'],
+                time: post['time'],
+              );
+            },
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: (){
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CreateGroup())
+                  MaterialPageRoute(builder: (context) => const CreatePost())
               );
             },
             child: const Icon(Icons.add),

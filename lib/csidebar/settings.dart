@@ -51,17 +51,17 @@ class _SettingsState extends State<Settings> {
       ),
       body: fetching
           ? const Center(
-        child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(),
       )
           : ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) => DataCard(
-          data: data[index],
-          edit: edit,
-          index: index,
-          delete: delete,
+            itemCount: data.length,
+            itemBuilder: (context, index) => DataCard(
+            data: data[index],
+            edit: edit,
+            index: index,
+            delete: delete,
+          ),
         ),
-      ),
       drawer: const NavBar(),
     );
   }
