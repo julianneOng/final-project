@@ -1,5 +1,6 @@
 import 'package:finalproject/csidebar/settings.dart';
 import 'package:finalproject/login_page.dart';
+import 'package:finalproject/sqlite/home.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
@@ -34,6 +35,16 @@ class _NavBarState extends State<NavBar> {
                   image: NetworkImage('https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg')
               ),
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text ('Home'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage())
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.person),
