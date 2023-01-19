@@ -1,5 +1,6 @@
 import 'package:finalproject/csidebar/settings.dart';
 import 'package:finalproject/screen/auth/login_page.dart';
+import 'package:finalproject/screen/friends.dart';
 import 'package:finalproject/screen/home.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,12 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.person),
             title: const Text('Friends'),
-            onTap: () => null,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Friends())
+              );
+            },
           ),
           const ListTile(
             leading: Icon(Icons.notifications),
