@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'sqlite/data_model.dart';
-import 'sqlite/database.dart';
-import 'sqlite/home.dart';
+import 'package:finalproject/util/data_model.dart';
+import 'package:finalproject/util/database.dart';
+import 'package:finalproject/screen/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

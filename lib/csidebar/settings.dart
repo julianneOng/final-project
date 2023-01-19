@@ -1,7 +1,7 @@
-import 'package:finalproject/sqlite/data_model.dart';
-import 'package:finalproject/sqlite/database.dart';
+import 'package:finalproject/util/data_model.dart';
+import 'package:finalproject/util/database.dart';
 import 'package:flutter/material.dart';
-import '../sqlite/create_account.dart';
+import 'package:finalproject/screen/auth/create_account.dart';
 import 'collapsible_sidebar.dart';
 
 class Settings extends StatefulWidget {

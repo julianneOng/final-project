@@ -1,6 +1,6 @@
 import 'package:finalproject/csidebar/settings.dart';
-import 'package:finalproject/login_page.dart';
-import 'package:finalproject/sqlite/home.dart';
+import 'package:finalproject/screen/auth/login_page.dart';
+import 'package:finalproject/screen/home.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {

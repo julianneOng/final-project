@@ -1,5 +1,5 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
-import 'package:finalproject/sqlite/create_post.dart';
+import 'package:finalproject/screen/create_post.dart';
 import 'package:finalproject/widget/post_item.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

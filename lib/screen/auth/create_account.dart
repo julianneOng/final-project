@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'data_model.dart';
+import 'package:finalproject/util/data_model.dart';
 import 'dart:convert';
 
 Future<DataModel> postAccount(  int? id, String firstname, String lastname, String username, String password, String email) async {
