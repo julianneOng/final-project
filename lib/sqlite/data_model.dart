@@ -19,4 +19,16 @@ class DataModel {
         "password": password,
         "email":  email,
       };
+
+
+  factory DataModel.fromJson(Map<dynamic, dynamic> json) {
+    return DataModel(
+      id: json['id'],
+      firstname: json['firstname'],
+      lastname: json['lastname'],
+      username: json['username'],
+      password: json['password'],
+      email: json['email'],
+    );
+  }
 }

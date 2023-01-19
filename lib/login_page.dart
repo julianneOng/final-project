@@ -3,7 +3,32 @@ import 'sqlite/data_model.dart';
 import 'sqlite/database.dart';
 import 'sqlite/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+Future<DataModel> postAccount(  int? id, String firstname, String lastname, String username, String password, String email) async {
+  final response = await http.post(
+    Uri.parse("https://63c8e7d6c3e2021b2d4b8ffb.mockapi.io/users"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic>{
+      'id': id,
+      'firstname': firstname,
+      'lastname': lastname,
+      'username': username,
+      'password': password,
+      'email': email
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    //print (response.statusCode); //to check if addTodo is success
+    return DataModel.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to Add Todo');
+  }
+}
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -188,6 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                   await db.insertData(dataLocal);
                   dataLocal.id = data[data.length - 1].id! + 1;
                   setState(() {
+                    postAccount(dataLocal.id, firstNameController.text, lastNameController.text, userNameController.text, passwordController.text, emailController.text);
                     data.add(dataLocal);
                   });
                   firstNameController.clear();
