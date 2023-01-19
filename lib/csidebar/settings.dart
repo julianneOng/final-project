@@ -78,14 +78,14 @@ class _SettingsState extends State<Settings> {
                 children: [
                   TextFormField(
                     controller: userNameController,
-                    decoration: const InputDecoration(labelText: "title"),
+                    decoration: const InputDecoration(labelText: "Username"),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   TextFormField(
-                    controller: passwordController,
-                    decoration: const InputDecoration(labelText: "Subtitle"),
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: "Email"),
                   ),
                 ],
               ),
