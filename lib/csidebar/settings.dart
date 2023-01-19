@@ -116,7 +116,7 @@ class _SettingsState extends State<Settings> {
     lastNameController.text = data[index].lastname;
     userNameController.text = data[index].username;
     passwordController.text = data[index].password;
-    emailController.text = data[index].password;
+    emailController.text = data[index].email;
     popUpdate();
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'sqlite/data_model.dart';
 import 'sqlite/database.dart';
 import 'sqlite/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,6 +18,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+
+  late SharedPreferences logindata;
+  late bool newuser;
 
   var formKey = GlobalKey<FormState>();
   List<DataModel> data = [];
@@ -48,58 +52,75 @@ class _LoginPageState extends State<LoginPage> {
       fetching = false;
     });
   }
+
+  void check_if_already_login() async {
+    logindata = await SharedPreferences.getInstance();
+    newuser = (logindata.getBool('login') ?? true);
+
+    print(newuser);
+    if (newuser == false) {
+      Navigator.pushReplacement(
+          context, new MaterialPageRoute(builder: (context) => HomePage()));
+    }
+  }
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    userNameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Icon(Icons.handshake),
-        title: const Text("KoneK"),
-      ),
-      body: Form(
-        key: formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            TextFormField(
-              controller: userNameController,
-              keyboardType: TextInputType.name,
-              decoration: const InputDecoration(
-                  labelText: "Username"
-              ),
-              validator: (value){
-                return (value == '')? "Input Name" : null;
-              },
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-                controller: passwordController,
-                keyboardType: TextInputType.name,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                )
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-                onPressed: () async {
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()
+        appBar: AppBar(
+          leading: const Icon(Icons.handshake),
+          title: const Text("KoneK"),
+        ),
+        body: Form(
+            key: formKey,
+            child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  TextFormField(
+                    controller: userNameController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                        labelText: "Username"
+                    ),
+                    validator: (value){
+                      return (value == '')? "Input Name" : null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.name,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
                       )
-                  );
-                },
-                child: const Text("Log In"),
-            ),
-            TextButton(
-                onPressed: (){
-                  // Navigator.pop(context);
-              showMyDialogue();
-              },
-                child: const Text("Create Account")
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const HomePage()
+                            )
+                        );
+                      },
+                      child: const Text("Log In")
+                  ),
+                  TextButton(
+                      onPressed: (){
+                        showMyDialogue();
+                      },
+                      child: const Text("Create Account")
+                  )
+                ]
             )
-          ]
         )
-      )
     );
   }
 
@@ -138,7 +159,6 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: passwordController,
-                      obscureText: true,
                       keyboardType: TextInputType.name,
                       decoration: const InputDecoration(
                           labelText: "Password"),
@@ -184,7 +204,4 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
   }
-
-
 }
-

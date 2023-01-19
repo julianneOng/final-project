@@ -1,6 +1,7 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
 import 'package:finalproject/sqlite/create_group.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,9 +11,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late SharedPreferences logindata;
+  late String username;
+
   @override
-  void initState(){
+  void initState() {
+    // TODO: implement initState
     super.initState();
+    initial();
+  }
+  void initial() async {
+    logindata = await SharedPreferences.getInstance();
+    setState(() {
+      username = logindata.getString('username')!;
+    });
   }
 
   @override void dispose(){
