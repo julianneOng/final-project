@@ -88,10 +88,11 @@ class _LoginPageState extends State<LoginPage> {
                       )
                   );
                 },
-                child: const Text("Log In")
+                child: const Text("Log In"),
             ),
             TextButton(
                 onPressed: (){
+                  // Navigator.pop(context);
               showMyDialogue();
               },
                 child: const Text("Create Account")
@@ -156,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
             actions: [
               TextButton(
                 onPressed: () async {
+                  Navigator.pop(context);
                   DataModel dataLocal = DataModel(
                     firstname: firstNameController.text,
                     lastname: lastNameController.text,
@@ -173,7 +175,6 @@ class _LoginPageState extends State<LoginPage> {
                   userNameController.clear();
                   passwordController.clear();
                   emailController.clear();
-                  Navigator.pop(context);
                 },
                 child: const Center(
                   child: Text("Sign Up"),
