@@ -145,7 +145,12 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.name,
+                      obscureText: true,
                       decoration: const InputDecoration(
+                        // prefixIcon: Icon(
+                        //   Icons.vpn_key,
+                        //   color: Colors.grey,
+                        // ),
                         labelText: 'Password',
                         hintText: 'Enter your password',
                       )
@@ -210,6 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.name,
+                      obscureText: true,
                       decoration: const InputDecoration(
                           labelText: "Password"),
                     ),

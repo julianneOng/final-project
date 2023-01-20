@@ -1,7 +1,6 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
 import 'package:finalproject/screen/create_post.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -13,8 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late SharedPreferences logindata;
-  late String username;
+
 
   List posts = <dynamic>[];
 
@@ -22,7 +20,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    initial();
     getPosts();
   }
 
@@ -36,17 +33,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void initial() async {
-    logindata = await SharedPreferences.getInstance();
-    setState(() {
-      username = logindata.getString('username')!;
-    });
-  }
-
-
   @override void dispose(){
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
