@@ -80,7 +80,7 @@ class _NavBarState extends State<NavBar> {
                       child: Column(
                         children: <Widget>[
                           IconButton(
-                            padding: const EdgeInsets.all(15),
+                            // padding: const EdgeInsets.all(15),
                             icon: const Icon(Icons.camera_alt),
                             color: Colors.green,
                             onPressed: () {
@@ -168,7 +168,7 @@ class _NavBarState extends State<NavBar> {
           ),
           const ListTile(
             leading: Icon(Icons.notifications),
-            title: Text('Request'),
+            title: Text('Notifications'),
           ),
           const Divider(),
           ListTile(
