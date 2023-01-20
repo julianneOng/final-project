@@ -1,9 +1,9 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
 import 'package:finalproject/screen/create_post.dart';
-import 'package:finalproject/widget/post_item.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:finalproject/util/data.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,12 +16,26 @@ class _HomePageState extends State<HomePage> {
   late SharedPreferences logindata;
   late String username;
 
+  List posts = <dynamic>[];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     initial();
+    getPosts();
   }
+
+  getPosts() async {
+    var url = 'https://63c95a0e320a0c4c9546afb1.mockapi.io/api/posts';
+    var response = await http.get(Uri.parse(url));
+
+    setState( () {
+      posts = convert.jsonDecode(response.body) as List<dynamic>;
+    }
+    );
+  }
+
   void initial() async {
     logindata = await SharedPreferences.getInstance();
     setState(() {
@@ -67,11 +81,47 @@ class _HomePageState extends State<HomePage> {
             itemCount: posts.length,
             itemBuilder: (BuildContext context, int index) {
               Map post = posts[index];
-              return PostItem(
-                img: post['img'],
-                name: post['name'],
-                dp: post['dp'],
-                time: post['time'],
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: InkWell(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: CircleAvatar(
+                          child: Image.network(
+                            "${posts[index]['avatar']}",
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.all(0),
+                        title: Text(
+                          "${posts[index]['user']}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Text(
+                          "${posts[index]['createdAt']}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          '${posts[index]['message']}'
+                        ),
+                      ),
+                      const Divider(
+                        height: 10,
+                        thickness: 2,
+                        indent: 5,
+                        endIndent: 5,
+                      ),
+                    ],
+                  ),
+                  onTap: (){},
+                ),
               );
             },
           ),

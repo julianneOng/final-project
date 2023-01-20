@@ -15,6 +15,16 @@ List names = [
   "Stacy Christensen",
 ];
 
+List contacts = [
+  "Jeremiah Larry King Ungsod",
+  "Arjay Audiencia Charcos",
+  "Janmark Sabanal",
+  "Johnlearn Mosqueda",
+  "Jonard Salvanera Estamo",
+  "Julianne G. Ong",
+  "Ronald Naguita",
+];
+
 List posts = List.generate(
     13,
         (index) => {
@@ -32,3 +42,12 @@ List friends = List.generate(
       "status": "Anything could be here",
       "isAccept": random.nextBool(),
     });
+
+List group = List.generate(
+    7,
+        (index) => {
+      "name": contacts[(random.nextInt(7))],
+      "dp": "assets/images/cm${random.nextInt(7)}.jpeg",
+      "status": "Group Member",
+    });
+

@@ -5,14 +5,16 @@ import 'package:finalproject/screen/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:convert' as convert;
 
-Future<DataModel> postAccount(  int? id, String firstname, String lastname, String username, String password, String email) async {
+Future<DataModel> postAccount(int? id, String firstname, String lastname, String username, String password, String email) async {
   final response = await http.post(
-    Uri.parse("https://63c8e7d6c3e2021b2d4b8ffb.mockapi.io/users"),
+    Uri.parse("https://63c95a0e320a0c4c9546afb1.mockapi.io/api/users"),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
-    body: jsonEncode(<String, dynamic>{
+    body: jsonEncode(<dynamic, dynamic>{
       'id': id,
       'firstname': firstname,
       'lastname': lastname,
@@ -23,7 +25,6 @@ Future<DataModel> postAccount(  int? id, String firstname, String lastname, Stri
   );
 
   if (response.statusCode == 201) {
-    //print (response.statusCode); //to check if addTodo is success
     return DataModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to Add Todo');
@@ -46,11 +47,11 @@ class _LoginPageState extends State<LoginPage> {
 
   late SharedPreferences logindata;
   late bool newuser;
-
+  List todos = <dynamic>[];
   var formKey = GlobalKey<FormState>();
   List<DataModel> data = [];
   bool fetching = true;
-  int currentIndex = 0;
+  late var currentIndex;
   // bool _obscureText = true;
 
   // String? _password;
@@ -68,26 +69,49 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     db = DB();
     db.initDB();
-    getData2();
+    checkPermission();
+    getUsers();
+    // getData2();
   }
 
-  void getData2() async {
-    data = await db.getData();
-    setState(() {
-      fetching = false;
-    });
+  checkPermission() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+      Permission.camera,
+    ].request();
+    statuses[Permission.storage];
   }
 
-  void check_if_already_login() async {
-    logindata = await SharedPreferences.getInstance();
-    newuser = (logindata.getBool('login') ?? true);
 
-    print(newuser);
-    if (newuser == false) {
-      Navigator.pushReplacement(
-          context, new MaterialPageRoute(builder: (context) => HomePage()));
+  getUsers() async {
+    var url = 'https://63c95a0e320a0c4c9546afb1.mockapi.io/api/users';
+    var response = await http.get(Uri.parse(url));
+
+    setState( () {
+      todos = convert.jsonDecode(response.body) as List<dynamic>;
     }
+    );
   }
+
+
+
+  // void getData2() async {
+  //   data = await db.getData();
+  //   setState(() {
+  //     fetching = false;
+  //   });
+  // }
+  //
+  // void check_if_already_login() async {
+  //   logindata = await SharedPreferences.getInstance();
+  //   newuser = (logindata.getBool('login') ?? true);
+  //
+  //   print(newuser);
+  //   if (newuser == false) {
+  //     Navigator.pushReplacement(
+  //         context, new MaterialPageRoute(builder: (context) => HomePage()));
+  //   }
+  // }
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -159,6 +183,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
+                key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -201,8 +226,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             actions: [
               TextButton(
-                onPressed: () async {
+                onPressed: () {
                   Navigator.pop(context);
+                  currentIndex = todos.lastIndexOf('id', 0);
                   DataModel dataLocal = DataModel(
                     firstname: firstNameController.text,
                     lastname: lastNameController.text,
@@ -210,11 +236,16 @@ class _LoginPageState extends State<LoginPage> {
                     password: passwordController.text,
                     email: emailController.text,
                   );
-                  await db.insertData(dataLocal);
-                  dataLocal.id = data[data.length - 1].id! + 1;
+                  db.insertData(dataLocal);
                   setState(() {
-                    postAccount(dataLocal.id, firstNameController.text, lastNameController.text, userNameController.text, passwordController.text, emailController.text);
-                    data.add(dataLocal);
+                    postAccount(
+                        currentIndex,
+                        firstNameController.text,
+                        lastNameController.text,
+                        userNameController.text,
+                        passwordController.text,
+                        emailController.text
+                    );
                   });
                   firstNameController.clear();
                   lastNameController.clear();

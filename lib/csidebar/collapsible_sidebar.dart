@@ -1,5 +1,6 @@
 import 'package:finalproject/csidebar/settings.dart';
 import 'package:finalproject/screen/auth/login_page.dart';
+import 'package:finalproject/screen/contact_us.dart';
 import 'package:finalproject/screen/friends.dart';
 import 'package:finalproject/screen/home.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -75,7 +77,12 @@ class _NavBarState extends State<NavBar> {
           ListTile(
             leading: const Icon(Icons.description),
             title: const Text('Contact Us'),
-            onTap: () => null,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ContactUs())
+              );
+            },
           ),
           const Divider(),
           ListTile(
