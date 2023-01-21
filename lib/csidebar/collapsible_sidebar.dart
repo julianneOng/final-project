@@ -97,10 +97,9 @@ class _NavBarState extends State<NavBar> {
                                         if (cameraStatus == PermissionStatus.granted) {
                                           getCam(ImageSource.camera);
                                         } else if (cameraStatus == PermissionStatus.denied) {
-                                          return;
+                                          return ;
                                         }
 
-                                        Navigator.of(ctx).pop();
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.all(5),

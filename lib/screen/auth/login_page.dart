@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
 
   late SharedPreferences logindata;
   late bool newuser;
-  List todos = <dynamic>[];
+  List accounts = <dynamic>[];
   var formKey = GlobalKey<FormState>();
   List<DataModel> data = [];
   bool fetching = true;
@@ -71,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
     db.initDB();
     checkPermission();
     getUsers();
-    // getData2();
   }
 
   checkPermission() async {
@@ -88,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
     var response = await http.get(Uri.parse(url));
 
     setState( () {
-      todos = convert.jsonDecode(response.body) as List<dynamic>;
+      accounts = convert.jsonDecode(response.body) as List<dynamic>;
     }
     );
   }
@@ -123,14 +122,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: const Icon(Icons.handshake),
-          title: const Text("KoneK"),
+          leading: const Icon(Icons.masks_outlined),
+          title: const Text("Unknownymous"),
         ),
         body: Form(
             key: formKey,
             child: ListView(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(30),
                 children: [
+                  const SizedBox(height: 50),
                   TextFormField(
                     controller: userNameController,
                     keyboardType: TextInputType.name,
@@ -188,7 +188,6 @@ class _LoginPageState extends State<LoginPage> {
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
-                key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -234,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  currentIndex = todos.lastIndexOf('id', 0);
+                  currentIndex = accounts.lastIndexOf('id', 0);
                   DataModel dataLocal = DataModel(
                     firstname: firstNameController.text,
                     lastname: lastNameController.text,
