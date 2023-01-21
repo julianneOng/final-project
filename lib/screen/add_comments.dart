@@ -1,3 +1,4 @@
+import 'package:finalproject/screen/display_comments.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -79,11 +80,14 @@ class _CommentsState extends State<Comments> {
   List comments = <dynamic>[];
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('MM-dd-yyyy/HH:mm:ss').format(DateTime.now());
+  List postComment = <dynamic>[];
+  int currentIndex = 0;
 
   @override
   void initState() {
     getPost();
     getComments();
+    postComment;
     super.initState();
   }
 
@@ -107,106 +111,68 @@ class _CommentsState extends State<Comments> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Comments"),
+        title: const Text("Add Comment"),
       ),
-      body: ListView.builder(
-          itemCount: post.length,
-          itemBuilder: (context, index){
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: InkWell(
-                child: Flexible(
-                    child: ListView(
-                      children: <Widget>[
-                        ListTile(
-                          leading: CircleAvatar(
-                            child: Image.network(
-                              "${post[widget.data-1]['avatar']}",
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.all(0),
-                          title: Text(
-                            "${post[widget.data-1]['user']}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          trailing: Text(
-                            "${post[widget.data-1]['createdAt']}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text(
-                              '${post[widget.data-1]['message']}'
-                          ),
-                        ),
-                        const Divider(
-                          height: 10,
-                          thickness: 2,
-                          indent: 5,
-                          endIndent: 5,
-                        ),
-                        Form(
-                            key: formKey,
-                            child: ListView(
-                              padding: const EdgeInsets.all(30),
-                              children: [
-                                TextFormField(
-                                  controller: aliasController,
-                                  keyboardType: TextInputType.name,
-                                  decoration: const InputDecoration(
-                                    labelText: "Alias",
-                                    hintText: "Ex. The Ecologist",
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                TextFormField(
-                                  controller: commentController,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                    labelText: "Post Here",
-                                    hintText: "How was your day?",
-                                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                ElevatedButton(
-                                    onPressed: (){
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        addComment(
-                                            comments.lastIndexOf('postId', 0),
-                                            widget.data-1,
-                                            commentController.text,
-                                            aliasController.text,
-                                            formattedDate
-                                        );
-                                      });
-                                      commentController.clear();
-                                      aliasController.clear();
-                                    },
-                                    child: const Text("POST")
-                                ),
-                              ],
-                            )
-                        ),
-                      ],
-                    ),
-                )
-
+      body: Form(
+          key: formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(30),
+            children: [
+              TextFormField(
+                controller: aliasController,
+                keyboardType: TextInputType.name,
+                decoration: const InputDecoration(
+                  labelText: "Alias",
+                  hintText: "Ex. The Ecologist",
+                ),
               ),
-            );
-          }
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: commentController,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: InputDecoration(
+                  labelText: "Comment Here",
+                  hintText: "Input you comment here",
+                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                    setState(() {
+                      addComment(
+                          comments.lastIndexOf('commentId', 0),
+                          widget.data,
+                          commentController.text,
+                          aliasController.text,
+                          formattedDate
+                      );
+                    });
+                    commentController.clear();
+                    aliasController.clear();
+                  },
+                  child: const Text("Comment")
+              ),
+              TextButton(
+                  onPressed: (){
+                    currentIndex = widget.data;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DisplayComments(data: currentIndex))
+                    );
+                  },
+                  child: const Text("See All Comments")
+              ),
+            ],
+          )
       ),
     );
   }

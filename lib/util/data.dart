@@ -16,13 +16,13 @@ List names = [
 ];
 
 List contacts = [
-  "Jeremiah Larry King Ungsod",
-  "Arjay Audiencia Charcos",
-  "Janmark Sabanal",
-  "Johnlearn Mosqueda",
-  "Jonard Salvanera Estamo",
-  "Julianne G. Ong",
-  "Ronald Naguita",
+  {'name': "Jeremiah Larry King Ungsod", 'email': ''},
+{'name': "Arjay Audiencia Charcos", 'email': ''},
+{'name': "Janmark Sabanal", 'email': ''},
+{'name': "Johnlearn Mosqueda",'email': ''},
+{'name':  "Jonard Salvanera Estamo",'email': ''},
+{'name': "Julianne G. Ong",'email': ''},
+{'name': "Ronald Naguita",'email': ''},
 ];
 
 List posts = List.generate(
@@ -46,7 +46,7 @@ List friends = List.generate(
 List group = List.generate(
     7,
         (index) => {
-      "name": contacts[(random.nextInt(7))],
+      "name": contacts,
       "dp": "assets/images/cm${random.nextInt(7)}.jpeg",
       "status": "Group Member",
     });

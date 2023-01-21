@@ -52,16 +52,6 @@ class _LoginPageState extends State<LoginPage> {
   List<DataModel> data = [];
   bool fetching = true;
   late int currentIndex;
-  // bool _obscureText = true;
-
-  // String? _password;
-  //
-  // void _toggle() {
-  //   setState(() {
-  //     _obscureText = !_obscureText;
-  //   });
-  // }
-
   late DB db;
 
   @override
@@ -96,18 +86,16 @@ class _LoginPageState extends State<LoginPage> {
     var username = userNameController.text;
     var password = passwordController.text;
 
-    for(var i = 0; i <= accounts.length; i++) {
-        if(username == accounts[i]['username'] && password == accounts[i]['password']) {
+      for (var i = 0; i <= accounts.length; i++) {
+        if (username == accounts[i]['username'] &&
+            password == accounts[i]['password']) {
           _showMsg('Login Success');
-         await Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
-
-         break;
-      }else {
-          _showMsg('Incorrect username or password');
+          await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage(data: int.parse(accounts[i]['id']))));
           break;
         }
     }
-
   }
   _showMsg(msg) {
     final snackBar = SnackBar(
@@ -120,23 +108,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  // void getData2() async {
-  //   data = await db.getData();
-  //   setState(() {
-  //     fetching = false;
-  //   });
-  // }
-  //
-  // void check_if_already_login() async {
-  //   logindata = await SharedPreferences.getInstance();
-  //   newuser = (logindata.getBool('login') ?? true);
-  //
-  //   print(newuser);
-  //   if (newuser == false) {
-  //     Navigator.pushReplacement(
-  //         context, new MaterialPageRoute(builder: (context) => HomePage()));
-  //   }
-  // }
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -149,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         appBar: AppBar(
           leading: const Icon(Icons.masks_outlined),
-          title: const Text("Unknownymous"),
+          title: const Text("Anonymity"),
         ),
         body: Form(
             key: formKey,
@@ -210,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     TextFormField(
@@ -217,6 +189,9 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.name,
                       decoration: const InputDecoration(
                           labelText: "First Name"),
+                      validator: (value){
+                        return (value == '')? "Input First Name" : null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -224,6 +199,9 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.name,
                       decoration: const InputDecoration(
                           labelText: "Last Name"),
+                      validator: (value){
+                        return (value == '')? "Input Last Name" : null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -231,6 +209,9 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.name,
                       decoration: const InputDecoration(
                           labelText: "Username"),
+                      validator: (value){
+                        return (value == '')? "Input Username" : null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -239,6 +220,9 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       decoration: const InputDecoration(
                           labelText: "Password"),
+                      validator: (value){
+                        return (value == '')? "Input Password" : null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
@@ -246,6 +230,9 @@ class _LoginPageState extends State<LoginPage> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                           labelText: "Email Address"),
+                      validator: (value){
+                        return (value == '')? "Input Email Address" : null;
+                      },
                     ),
                   ],
                 ),
@@ -254,31 +241,33 @@ class _LoginPageState extends State<LoginPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
-                  currentIndex = accounts.lastIndexOf('id', 0);
-                  DataModel dataLocal = DataModel(
-                    firstname: firstNameController.text,
-                    lastname: lastNameController.text,
-                    username: userNameController.text,
-                    password: passwordController.text,
-                    email: emailController.text,
-                  );
-                  db.insertData(dataLocal);
-                  setState(() {
-                    postAccount(
-                        currentIndex,
-                        firstNameController.text,
-                        lastNameController.text,
-                        userNameController.text,
-                        passwordController.text,
-                        emailController.text
-                    );
-                  });
-                  firstNameController.clear();
-                  lastNameController.clear();
-                  userNameController.clear();
-                  passwordController.clear();
-                  emailController.clear();
+                   if (formKey.currentState!.validate()) {
+                     Navigator.pop(context);
+                     currentIndex = accounts.lastIndexOf('id', 0);
+                     DataModel dataLocal = DataModel(
+                       firstname: firstNameController.text,
+                       lastname: lastNameController.text,
+                       username: userNameController.text,
+                       password: passwordController.text,
+                       email: emailController.text,
+                     );
+                     db.insertData(dataLocal);
+                     setState(() {
+                       postAccount(
+                           currentIndex,
+                           firstNameController.text,
+                           lastNameController.text,
+                           userNameController.text,
+                           passwordController.text,
+                           emailController.text
+                       );
+                     });
+                     firstNameController.clear();
+                     lastNameController.clear();
+                     userNameController.clear();
+                     passwordController.clear();
+                     emailController.clear();
+                   }
                 },
                 child: const Center(
                   child: Text("Sign Up"),

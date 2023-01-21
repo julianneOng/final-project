@@ -8,9 +8,15 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 class NavBar extends StatefulWidget {
-  const NavBar({Key? key}) : super(key: key);
+
+  final int data;
+  const NavBar({
+    required this.data,
+    Key? key}) : super(key: key);
 
   @override
   State<NavBar> createState() => _NavBarState();
@@ -19,15 +25,39 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   File? file;
   ImagePicker image = ImagePicker();
-
-  late SharedPreferences logindata;
+  List users = <dynamic>[];
+  late SharedPreferences loginData;
   late String username;
+  List user = <dynamic>[];
+  int currentIndex = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initial();
+    getUsers();
+  }
+  
+
+  getUsers() async {
+    var url = 'https://63c95a0e320a0c4c9546afb1.mockapi.io/api/users';
+    var response = await http.get(Uri.parse(url));
+
+    setState( () {
+      users = convert.jsonDecode(response.body) as List<dynamic>;
+    }
+    );
+  }
+  
+  getUser() async {
+    for (var i = 0; i <= users.length; i++) {
+      if (widget.data == users[i]['id']) {
+        setState(() {
+          currentIndex = widget.data-1;
+        });
+        break;
+      }
+    }
   }
 
   @override void dispose(){
@@ -35,9 +65,9 @@ class _NavBarState extends State<NavBar> {
   }
 
   void initial() async {
-    logindata = await SharedPreferences.getInstance();
+    loginData = await SharedPreferences.getInstance();
     setState(() {
-      username = logindata.getString('username')!;
+      username = loginData.getString('username')!;
     });
   }
 
@@ -48,8 +78,8 @@ class _NavBarState extends State<NavBar> {
         children: [
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Theme.of(context).canvasColor),
-            accountName: const Text("default_username"),
-            accountEmail: const Text('default_email@gmail.com'),
+            accountName: Text("${users[currentIndex]['username']}"),
+            accountEmail: Text('${users[currentIndex]['email']}'),
             currentAccountPicture: CircleAvatar(
               child: Stack(
                   children: [
@@ -65,14 +95,13 @@ class _NavBarState extends State<NavBar> {
                             Icons.image,
                             size: 50,
                           )
-                              : Image.file(
-                            file!,
+                              : Image.network(
+                            "${users[currentIndex]['avatar']}",
                             fit: BoxFit.fill,
                           ),
                         ),
                       ),
                     ),
-
                     //use Positioned
                     Positioned(
                       bottom: 0,
@@ -82,7 +111,7 @@ class _NavBarState extends State<NavBar> {
                           IconButton(
                             // padding: const EdgeInsets.all(15),
                             icon: const Icon(Icons.camera_alt),
-                            color: Colors.green,
+                            color: Colors.white,
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -115,8 +144,6 @@ class _NavBarState extends State<NavBar> {
                                         } else if (cameraStatus == PermissionStatus.denied) {
                                           return;
                                         }
-
-                                        Navigator.of(ctx).pop();
 
                                       },
                                       child: Container(
@@ -151,32 +178,17 @@ class _NavBarState extends State<NavBar> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage())
+                MaterialPageRoute(builder: (context) => HomePage(data: widget.data))
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Friends'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Friends())
-              );
-            },
-          ),
-          const ListTile(
-            leading: Icon(Icons.notifications),
-            title: Text('Notifications'),
-          ),
-          const Divider(),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Settings())
+                  MaterialPageRoute(builder: (context) => Settings(data: widget.data))
               );
             },
           ),

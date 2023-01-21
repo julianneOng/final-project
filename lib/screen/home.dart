@@ -1,5 +1,6 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
 import 'package:finalproject/screen/create_post.dart';
+import 'package:finalproject/screen/display_comments.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -7,7 +8,11 @@ import 'dart:convert' as convert;
 import 'add_comments.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+
+  final int data;
+  const HomePage({
+    required this.data,
+    Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -67,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          drawer: const NavBar(),
+          drawer: NavBar(data: widget.data),
           body: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             itemCount: posts.length,

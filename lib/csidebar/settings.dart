@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
-// import '../sqlite/create_account.dart';
 import '../util/data_model.dart';
 import '../util/database.dart';
-import 'collapsible_sidebar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'dart:convert';
@@ -34,7 +31,11 @@ Future<DataModel> updateAccount(int id, String firstname, String lastname, Strin
 }
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+
+  final int data;
+  const Settings({
+    required this.data,
+    Key? key}) : super(key: key);
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -51,36 +52,27 @@ class _SettingsState extends State<Settings> {
   bool fetching = false;
   int currentIndex = 0;
   var formKey = GlobalKey<FormState>();
-  List todos = <dynamic>[];
+  List users = <dynamic>[];
 
   late DB db;
   @override
   void initState() {
     super.initState();
     db = DB();
-    // getData2();
-    getTodo();
+    getUsers();
   }
 
-  // void getData2() async {
-  //   data = await db.getData();
-  //   setState(() {
-  //     fetching = false;
-  //   });
-  // }
-
-
-  getTodo() async {
+  getUsers() async {
     var url = 'https://63c95a0e320a0c4c9546afb1.mockapi.io/api/users';
     var response = await http.get(Uri.parse(url));
 
     setState( () {
-      todos = convert.jsonDecode(response.body) as List<dynamic>;
+      users = convert.jsonDecode(response.body) as List<dynamic>;
     }
     );
   }
 
-  deleteTodo(int id) async {
+  deleteUser(int id) async {
     var response = await http.delete(Uri.parse('https://63c95a0e320a0c4c9546afb1.mockapi.io/api/users/$id'));
 
     if (response.statusCode == 200) {
@@ -97,134 +89,20 @@ class _SettingsState extends State<Settings> {
         centerTitle: true,
         title: const Text("Settings"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
-        child: const Icon(Icons.add),
-      ),
-      body:
-      // fetching
-      //     ? const Center(
-      //   child: CircularProgressIndicator(),
-      // )
-      //     :
-      ListView.builder(
-          itemCount: todos.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              // return Form(
-              //   key: formKey,
-              //   child: ListView(
-              //   padding: const EdgeInsets.all(20),
-              //   children: [
-              //     TextFormField(
-              //       controller: firstNameController,
-              //       keyboardType: TextInputType.name,
-              //       decoration: const InputDecoration(
-              //           labelText: "First Name"
-              //       ),
-              //       validator: (value){
-              //         return (value == '')? "Input Name" : null;
-              //       },
-              //     ),
-              //     const SizedBox(height: 10),
-              //     TextFormField(
-              //       controller: lastNameController,
-              //       keyboardType: TextInputType.name,
-              //       decoration: const InputDecoration(
-              //           labelText: "Last Name"
-              //       ),
-              //       validator: (value){
-              //         return (value == '')? "Input Name" : null;
-              //       },
-              //     ),
-              //     const SizedBox(height: 10),
-              //     TextFormField(
-              //       controller: userNameController,
-              //       keyboardType: TextInputType.name,
-              //       decoration: const InputDecoration(
-              //           labelText: "Username"
-              //       ),
-              //       validator: (value){
-              //         return (value == '')? "Input Name" : null;
-              //       },
-              //     ),
-              //     const SizedBox(height: 10),
-              //     TextFormField(
-              //       controller: passwordController,
-              //       keyboardType: TextInputType.name,
-              //       decoration: const InputDecoration(
-              //           labelText: "Password"
-              //       ),
-              //       validator: (value){
-              //         return (value == '')? "Input Name" : null;
-              //       },
-              //     ),
-              //     const SizedBox(height: 10),
-              //     TextFormField(
-              //       controller: emailController,
-              //       keyboardType: TextInputType.name,
-              //       decoration: const InputDecoration(
-              //           labelText: "Email Address"
-              //       ),
-              //       validator: (value){
-              //         return (value == '')? "Input Name" : null;
-              //       },
-              //     ),
-              //     const SizedBox(height: 10),
-              //     ElevatedButton(
-              //         onPressed: (){
-              //
-              //     },
-              //         child: const Text("UPDATE")
-              //     ),
-              //     const SizedBox(height: 20),
-              //     ElevatedButton(
-              //         onPressed: (){
-              //
-              //         },
-              //         child: const Text("DELETE")
-              //     ),
-              //   ]
-              leading: IconButton(
-                  onPressed: (){
-                    currentIndex = int.parse(todos[index]['id']);
-                    popUpdate(currentIndex);
-                  },
-                  icon: const Icon(Icons.update)),
-              title: Text('${todos[index]['id']} : ${todos[index]['username']}'),
-              trailing: IconButton(
-                  onPressed: (){
-                    int idNum = int.parse(todos[index]['id']);
-                    setState(() {
-                      todos.remove(todos[index]);
-                    });
-                    deleteTodo(idNum);
-                  },
-                  icon: const Icon(Icons.delete)),
-            );
-          }
-      ),
-      drawer: const NavBar(),
-    );
-  }
-  void popUpdate(int id) async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            scrollable: true,
-            contentPadding: const EdgeInsets.all(14),
-            content: Column(
+      body: Form(
+          key: formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: ListView(
+              padding: const EdgeInsets.all(20),
               children: [
                 TextFormField(
                   controller: firstNameController,
                   keyboardType: TextInputType.name,
                   decoration: const InputDecoration(
-                      labelText: "First Name"
+                    labelText: "First Name",
                   ),
                   validator: (value){
-                    return (value == '')? "Input Name" : null;
+                    return (value == '')? "Input First Name" : null;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -235,7 +113,7 @@ class _SettingsState extends State<Settings> {
                       labelText: "Last Name"
                   ),
                   validator: (value){
-                    return (value == '')? "Input Name" : null;
+                    return (value == '')? "Input Last Name" : null;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -246,7 +124,7 @@ class _SettingsState extends State<Settings> {
                       labelText: "Username"
                   ),
                   validator: (value){
-                    return (value == '')? "Input Name" : null;
+                    return (value == '')? "Input Username" : null;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -257,7 +135,7 @@ class _SettingsState extends State<Settings> {
                       labelText: "Password"
                   ),
                   validator: (value){
-                    return (value == '')? "Input Name" : null;
+                    return (value == '')? "Input Password" : null;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -268,53 +146,42 @@ class _SettingsState extends State<Settings> {
                       labelText: "Email Address"
                   ),
                   validator: (value){
-                    return (value == '')? "Input Name" : null;
+                    return (value == '')? "Input Email Address" : null;
                   },
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  // DataModel newData = todos[id];
-                  // newData.firstname = firstNameController.text;
-                  // newData.lastname = lastNameController.text;
-                  // newData.username = userNameController.text;
-                  // newData.password = passwordController.text;
-                  // newData.email = emailController.text;
-                  // db.update(newData, newData.id!);
-                  setState(() {
-                    updateAccount(
-                        id,
-                        firstNameController.text,
-                        lastNameController.text,
-                        userNameController.text,
-                        passwordController.text,
-                        emailController.text);
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text("Update"),
-              ),
-            ],
-          );
-        });
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        setState(() {
+                          updateAccount(
+                              widget.data,
+                              firstNameController.text,
+                              lastNameController.text,
+                              userNameController.text,
+                              passwordController.text,
+                              emailController.text);
+                        });
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text("UPDATE")
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: (){
+                      int idNum = int.parse(users[widget.data-1]['id']);
+                      setState(() {
+                        users.remove(users[widget.data-1]);
+                      });
+                      deleteUser(idNum);
+                      Navigator.pop(context);
+                    },
+                    child: const Text("DELETE")
+                ),
+              ]
+          )
+      )
+    );
   }
-
-// void edit(index) {
-//   currentIndex = index;
-//   firstNameController.text = data[index].firstname;
-//   lastNameController.text = data[index].lastname;
-//   userNameController.text = data[index].username;
-//   passwordController.text = data[index].password;
-//   emailController.text = data[index].email;
-//   popUpdate();
-// }
-
-// void delete(int index) {
-//   // db.delete(data[index].id!);
-//   setState(() {
-//     data.removeAt(index);
-//   });
-// }
 }
