@@ -1,7 +1,7 @@
 import 'package:finalproject/csidebar/settings.dart';
 import 'package:finalproject/screen/auth/login_page.dart';
-import 'package:finalproject/screen/contact_us.dart';
-import 'package:finalproject/screen/friends.dart';
+import 'package:finalproject/csidebar/contact_us.dart';
+import 'package:finalproject/csidebar/friends.dart';
 import 'package:finalproject/screen/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'comments.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -15,16 +17,16 @@ class _HomePageState extends State<HomePage> {
 
 
   List posts = <dynamic>[];
+  int postId = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     getPosts();
+    super.initState();
   }
 
   getPosts() async {
-    var url = 'https://63c95a0e320a0c4c9546afb1.mockapi.io/api/posts';
+    var url = 'https://63cb9d8cea85515415128b2b.mockapi.io/api/posts';
     var response = await http.get(Uri.parse(url));
 
     setState( () {
@@ -69,8 +71,7 @@ class _HomePageState extends State<HomePage> {
           body: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             itemCount: posts.length,
-            itemBuilder: (BuildContext context, int index) {
-              Map post = posts[index];
+            itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: InkWell(
@@ -110,7 +111,13 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  onTap: (){},
+                  onTap: () {
+                      postId = int.parse(posts[index]['postId']);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Comments(data: int.parse(posts[index]['postId'])))
+                      );
+                  },
                 ),
               );
             },

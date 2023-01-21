@@ -7,7 +7,7 @@ import 'dart:convert' as convert;
 
 Future<PostModel> createPost(int? postId, String message, String user, String createdAt) async {
   final response = await http.post(
-    Uri.parse("https://63c95a0e320a0c4c9546afb1.mockapi.io/api/posts"),
+    Uri.parse("https://63cb9d8cea85515415128b2b.mockapi.io/api/posts"),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
