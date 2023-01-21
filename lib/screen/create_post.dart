@@ -70,7 +70,6 @@ class _CreatePostState extends State<CreatePost> {
 
   var formKey = GlobalKey<FormState>();
   List posts = <dynamic>[];
-
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('MM-dd-yyyy/HH:mm:ss').format(DateTime.now());
 
@@ -87,12 +86,11 @@ class _CreatePostState extends State<CreatePost> {
 
     setState( () {
       posts = convert.jsonDecode(response.body) as List<dynamic>;
-    }
+      }
     );
-
-
-
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +140,8 @@ class _CreatePostState extends State<CreatePost> {
                   },
                   child: const Text("POST"))
             ],
-          )),
+          )
+      ),
     );
   }
 }

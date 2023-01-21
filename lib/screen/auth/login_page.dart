@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
   var formKey = GlobalKey<FormState>();
   List<DataModel> data = [];
   bool fetching = true;
-  late var currentIndex;
+  late int currentIndex;
   // bool _obscureText = true;
 
   // String? _password;
@@ -92,6 +92,32 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  loginData() async {
+    var username = userNameController.text;
+    var password = passwordController.text;
+
+    for(var i = 0; i <= accounts.length; i++) {
+        if(username == accounts[i]['username'] && password == accounts[i]['password']) {
+          _showMsg('Login Success');
+         await Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+
+         break;
+      }else {
+          _showMsg('Incorrect username or password');
+          break;
+        }
+    }
+
+  }
+  _showMsg(msg) {
+    final snackBar = SnackBar(
+        content: Text(msg),
+        action: SnackBarAction(
+          label: 'Close',
+          onPressed: () {},
+        ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
 
   // void getData2() async {
@@ -157,12 +183,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                      onPressed: () async {
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const HomePage()
-                            )
-                        );
+                      onPressed: () {
+                        loginData();
                       },
                       child: const Text("Log In")
                   ),
