@@ -1,7 +1,6 @@
 import 'package:finalproject/csidebar/settings.dart';
 import 'package:finalproject/screen/auth/login_page.dart';
 import 'package:finalproject/csidebar/contact_us.dart';
-import 'package:finalproject/csidebar/friends.dart';
 import 'package:finalproject/screen/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -13,7 +12,7 @@ import 'dart:convert' as convert;
 
 class NavBar extends StatefulWidget {
 
-  final int data;
+  final List data;
   const NavBar({
     required this.data,
     Key? key}) : super(key: key);
@@ -29,13 +28,16 @@ class _NavBarState extends State<NavBar> {
   late SharedPreferences loginData;
   late String username;
   List user = <dynamic>[];
-  int currentIndex = 0;
+  bool timer = true;
+  int userId = 0;
 
   @override
   void initState() {
     super.initState();
-    initial();
+    // initial();
+    // currentIndex;
     getUsers();
+    // getUser();
   }
   
 
@@ -48,28 +50,28 @@ class _NavBarState extends State<NavBar> {
     }
     );
   }
-  
-  getUser() async {
-    for (var i = 0; i <= users.length; i++) {
-      if (widget.data == users[i]['id']) {
-        setState(() {
-          currentIndex = widget.data-1;
-        });
-        break;
-      }
-    }
-  }
+  //
+  // getUser() async {
+  //   for (var i = 0; i <= users.length; i++) {
+  //     if (widget.data == users[i]['id']) {
+  //       setState(() {
+  //         currentIndex = i;
+  //       });
+  //       break;
+  //     }
+  //   }
+  // }
 
-  @override void dispose(){
-    super.dispose();
-  }
+  // @override void dispose(){
+  //   super.dispose();
+  // }
 
-  void initial() async {
-    loginData = await SharedPreferences.getInstance();
-    setState(() {
-      username = loginData.getString('username')!;
-    });
-  }
+  // void initial() async {
+  //   loginData = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     username = loginData.getString('username')!;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +80,8 @@ class _NavBarState extends State<NavBar> {
         children: [
           UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Theme.of(context).canvasColor),
-            accountName: Text("${users[currentIndex]['username']}"),
-            accountEmail: Text('${users[currentIndex]['email']}'),
+            accountName: Text("${widget.data[0]['username']}"),
+            accountEmail: Text('${widget.data[0]['email']}'),
             currentAccountPicture: CircleAvatar(
               child: Stack(
                   children: [
@@ -95,8 +97,8 @@ class _NavBarState extends State<NavBar> {
                             Icons.image,
                             size: 50,
                           )
-                              : Image.network(
-                            "${users[currentIndex]['avatar']}",
+                              : Image.asset(
+                            "assets/default_ava.jpg",
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -186,14 +188,15 @@ class _NavBarState extends State<NavBar> {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
+              userId = int.parse(widget.data[0]['id']);
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Settings(data: widget.data))
+                  MaterialPageRoute(builder: (context) => Settings(data: userId))
               );
             },
           ),
           ListTile(
-            leading: const Icon(Icons.description),
+            leading: const Icon(Icons.email),
             title: const Text('Contact Us'),
             onTap: () {
               Navigator.push(

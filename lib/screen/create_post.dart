@@ -136,9 +136,12 @@ class _CreatePostState extends State<CreatePost> {
                     });
                     messageController.clear();
                     userController.clear();
-
                   },
-                  child: const Text("POST"))
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.greenAccent
+                  ),
+                  child: const Text("POST", style: TextStyle(color: Colors.black, fontSize: 17))
+              ),
             ],
           )
       ),

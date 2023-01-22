@@ -1,3 +1,4 @@
+import 'package:finalproject/csidebar/collapsible_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/util/data_model.dart';
 import 'package:finalproject/util/database.dart';
@@ -48,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   late SharedPreferences logindata;
   late bool newuser;
   List accounts = <dynamic>[];
+  List account = <dynamic>[];
   var formKey = GlobalKey<FormState>();
   List<DataModel> data = [];
   bool fetching = true;
@@ -82,20 +84,36 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  loginData() async {
+  Future loginData() async {
+    
+
     var username = userNameController.text;
     var password = passwordController.text;
+    showDialog(
+        context: context,
+        builder: (context){
+          return const Center(
+              child: CircularProgressIndicator()
+          );
+        });
+    Navigator.of(context).pop();
 
       for (var i = 0; i <= accounts.length; i++) {
         if (username == accounts[i]['username'] &&
             password == accounts[i]['password']) {
           _showMsg('Login Success');
+          account.add(accounts[i]);
           await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage(data: int.parse(accounts[i]['id']))));
+              MaterialPageRoute(builder: (context) => HomePage(data: account))
+          );
+
+
+
           break;
         }
     }
+
   }
   _showMsg(msg) {
     final snackBar = SnackBar(
@@ -118,21 +136,23 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: const Icon(Icons.masks_outlined),
-          title: const Text("Anonymity"),
-        ),
         body: Form(
             key: formKey,
             child: ListView(
                 padding: const EdgeInsets.all(30),
                 children: [
+                  const Image(image: AssetImage("assets/logo.png"),
+                  width: 300,
+                  height: 300),
+                  const Text("ANONYMITY", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   const SizedBox(height: 50),
                   TextFormField(
                     controller: userNameController,
                     keyboardType: TextInputType.name,
-                    decoration: const InputDecoration(
-                        labelText: "Username"
+                    decoration: InputDecoration(
+                        labelText: "Username",
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
                     ),
                     validator: (value){
                       return (value == '')? "Input Name" : null;
@@ -143,13 +163,11 @@ class _LoginPageState extends State<LoginPage> {
                       controller: passwordController,
                       keyboardType: TextInputType.name,
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        // prefixIcon: Icon(
-                        //   Icons.vpn_key,
-                        //   color: Colors.grey,
-                        // ),
+                      decoration: InputDecoration(
                         labelText: 'Password',
                         hintText: 'Enter your password',
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
                       )
                   ),
                   const SizedBox(height: 10),
@@ -157,7 +175,10 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         loginData();
                       },
-                      child: const Text("Log In")
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.greenAccent
+                      ),
+                      child: const Text("Sign In", style: TextStyle(color: Colors.black, fontSize: 17))
                   ),
                   TextButton(
                       onPressed: (){

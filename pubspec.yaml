@@ -80,6 +80,7 @@ flutter:
     - assets/images/cm7.jpeg
     - assets/images/cm8.jpeg
     - assets/images/cm9.jpeg
+    - assets/logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -2,20 +2,13 @@ import 'package:finalproject/screen/auth/login_page.dart';
 import 'package:flutter/material.dart';
 
 
-void main() async {
-  runApp(const MyApp());
+void main() {
+  runApp( MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'Anonymity',
+    theme: ThemeData.dark(),
+    home: const LoginPage(),
+    )
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Konek',
-      theme: ThemeData.dark(),
-      home: const LoginPage(),
-    );
-  }
-}

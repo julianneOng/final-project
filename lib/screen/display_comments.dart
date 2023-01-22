@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+
 class DisplayComments extends StatefulWidget {
 
-  final int data;
+  final List data;
   const DisplayComments({
     required this.data,
     Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class DisplayComments extends StatefulWidget {
 class _DisplayCommentsState extends State<DisplayComments> {
 
   List comments = <dynamic>[];
-  List postComment = <dynamic>[];
+  late List postComment = <dynamic>[];
   int currentIndex = 0;
 
   @override
@@ -36,17 +37,7 @@ class _DisplayCommentsState extends State<DisplayComments> {
     }
 
   displayComments() async {
-    for(var i = 0; i <= comments.length; i++){
-      if(widget.data == comments[i]['postId']){
-          postComment.add(1);
-      }
-      if (postComment.isEmpty){
-        setState(() {
-          postComment.add("No Comments");
-        });
-
-      }
-    }
+    postComment = widget.data;
   }
 
   @override
@@ -59,10 +50,13 @@ class _DisplayCommentsState extends State<DisplayComments> {
           itemCount: postComment.length,
           itemBuilder: (context, index){
             return ListTile(
-                title: Text('${postComment.length}')
-                  );
-                }
-            )
-          );
+              title: Text("${postComment[index]['commentId']}"),
+              onTap: (){
+                Navigator.pop(context);
+              },
+            );
+          }
+          ),
+    );
   }
 }

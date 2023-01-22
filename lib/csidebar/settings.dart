@@ -1,3 +1,4 @@
+import 'package:finalproject/screen/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import '../util/data_model.dart';
 import '../util/database.dart';
@@ -53,6 +54,7 @@ class _SettingsState extends State<Settings> {
   int currentIndex = 0;
   var formKey = GlobalKey<FormState>();
   List users = <dynamic>[];
+  int idNum = 0;
 
   late DB db;
   @override
@@ -95,6 +97,7 @@ class _SettingsState extends State<Settings> {
           child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
+                const Text("Modify Account", style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center),
                 TextFormField(
                   controller: firstNameController,
                   keyboardType: TextInputType.name,
@@ -165,19 +168,26 @@ class _SettingsState extends State<Settings> {
                         Navigator.pop(context);
                       }
                     },
-                    child: const Text("UPDATE")
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.greenAccent
+                    ),
+                    child: const Text("UPDATE", style: TextStyle(color: Colors.black, fontSize: 17))
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                TextButton(
                     onPressed: (){
-                      int idNum = int.parse(users[widget.data-1]['id']);
+                      idNum = widget.data;
                       setState(() {
-                        users.remove(users[widget.data-1]);
+                        deleteUser(idNum);
                       });
-                      deleteUser(idNum);
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage())
+                      );
                     },
-                    child: const Text("DELETE")
+                    child: const Text("Delete Account",
+                      style: TextStyle(color: Colors.red)
+                    )
                 ),
               ]
           )

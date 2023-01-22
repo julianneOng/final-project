@@ -15,7 +15,7 @@ class _ContactUsState extends State<ContactUs> {
     {'name': "Janmark Sabanal", 'email': 'trishaganados01@gmail.com'},
     {'name': "Johnlearn Mosqueda",'email': 'mosquedajohnlearn@gmail.com'},
     {'name':  "Jonard Salvanera Estamo",'email': 'joboy.estamo@gmail.com'},
-    {'name': "Julianne G. Ong",'email': ''},
+    {'name': "Julianne G. Ong",'email': 'ongjulianne02@gmail.com'},
     {'name': "Ronald Naguita",'email': 'ronaldnaguita@gmail.com'},
     {'name': "Angelica Lazarito",'email': 'azerlazarito@gmail.com'},
   ];

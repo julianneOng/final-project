@@ -80,14 +80,14 @@ class _CommentsState extends State<Comments> {
   List comments = <dynamic>[];
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('MM-dd-yyyy/HH:mm:ss').format(DateTime.now());
-  List postComment = <dynamic>[];
+  List postComments = <dynamic>[];
   int currentIndex = 0;
 
   @override
   void initState() {
     getPost();
     getComments();
-    postComment;
+    postComments;
     super.initState();
   }
 
@@ -99,6 +99,17 @@ class _CommentsState extends State<Comments> {
       post = convert.jsonDecode(response.body) as List<dynamic>;
     }
     );
+  }
+
+  displayComments() async {
+    for(var i = 0; i <= comments.length; i++){
+      currentIndex = widget.data;
+      if (widget.data == comments[i]['postId']){
+        setState(() {
+          postComments.add(comments[i]);
+        });
+      }
+    }
   }
 
   getComments() async {
@@ -139,7 +150,7 @@ class _CommentsState extends State<Comments> {
                 decoration: InputDecoration(
                   labelText: "Comment Here",
                   hintText: "Input you comment here",
-                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
                 ),
               ),
@@ -159,14 +170,19 @@ class _CommentsState extends State<Comments> {
                     commentController.clear();
                     aliasController.clear();
                   },
-                  child: const Text("Comment")
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.greenAccent
+                  ),
+                  child: const Text("Comment", style: TextStyle(color: Colors.black, fontSize: 17))
               ),
               TextButton(
-                  onPressed: (){
-                    currentIndex = widget.data;
-                    Navigator.push(
+                  onPressed: () {
+                    setState(() {
+                      // displayComments();
+                    });
+                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DisplayComments(data: currentIndex))
+                        MaterialPageRoute(builder: (context) => DisplayComments(data: postComments))
                     );
                   },
                   child: const Text("See All Comments")

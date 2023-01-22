@@ -1,6 +1,5 @@
 import 'package:finalproject/csidebar/collapsible_sidebar.dart';
 import 'package:finalproject/screen/create_post.dart';
-import 'package:finalproject/screen/display_comments.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -9,7 +8,7 @@ import 'add_comments.dart';
 
 class HomePage extends StatefulWidget {
 
-  final int data;
+  final List data;
   const HomePage({
     required this.data,
     Key? key}) : super(key: key);
@@ -22,12 +21,40 @@ class _HomePageState extends State<HomePage> {
 
 
   List posts = <dynamic>[];
+  List users = <dynamic>[];
   int postId = 0;
+  int currentIndex = 0;
+  List account = <dynamic>[];
 
   @override
   void initState() {
     getPosts();
+    // getUser();
+    getUsers();
     super.initState();
+  }
+
+
+
+  getUsers() async {
+    var url = 'https://63c95a0e320a0c4c9546afb1.mockapi.io/api/users';
+    var response = await http.get(Uri.parse(url));
+
+    setState( () {
+      users = convert.jsonDecode(response.body) as List<dynamic>;
+    }
+    );
+  }
+
+  getUser() async {
+    for (int i = 0; i <= users.length; i++) {
+      if (widget.data == users[i]['id']) {
+        setState(() {
+          currentIndex = i;
+        });
+        break;
+      }
+    }
   }
 
   getPosts() async {
@@ -134,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(builder: (context) => const CreatePost())
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.create_outlined),
           ),
         )
     );
